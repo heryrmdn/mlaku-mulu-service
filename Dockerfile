@@ -19,8 +19,5 @@ RUN npm run build
 # Expose the application port
 EXPOSE 3002
 
-# Run Migrations
-RUN npm run migrate:up
-
 # Command to run the application
 CMD ["node", "dist/main"]

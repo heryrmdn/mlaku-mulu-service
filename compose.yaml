@@ -2,7 +2,8 @@ version: '1.0'
 
 services:
   nest-app:
-    image: mlaku-mulu-service:latest
+    build: .
+    image: mlaku-mulu-service
     ports:
       - "3002:3002"
     environment:
