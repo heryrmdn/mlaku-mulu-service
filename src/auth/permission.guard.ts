@@ -17,7 +17,7 @@ export class PermissionGuard implements CanActivate {
 
     const { user } = context.switchToHttp().getRequest();
 
-    const rolePermissions = [...user.role.rolePermissions.map((rp) => rp.id)];
+    const rolePermissions = [...user.role.rolePermissions.map((rp) => rp.permissionId)];
 
     return requiredPermission.some((permission) =>
       rolePermissions.includes(permission),
