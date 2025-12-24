@@ -11,10 +11,13 @@ export class PermissionService {
   ) {}
 
   async getList(): Promise<Permission[]> {
-    return this.permissionRepository.find();
+    return this.permissionRepository.find({ withDeleted: true });
   }
 
   async getDetailById(id: number): Promise<Permission | null> {
-    return this.permissionRepository.findOne({ where: { id } });
+    return this.permissionRepository.findOne({
+      where: { id },
+      withDeleted: true,
+    });
   }
 }

@@ -20,6 +20,7 @@ export class TouristService {
   async getList(): Promise<Tourist[]> {
     return this.touristRepository.find({
       relations: { status: true, trips: true },
+      withDeleted: true,
     });
   }
 
@@ -27,6 +28,7 @@ export class TouristService {
     const tourist = await this.touristRepository.findOne({
       where: { id },
       relations: { status: true, trips: true },
+      withDeleted: true,
     });
     if (!tourist) {
       throw new NotFoundException('Tourist not found');
@@ -38,6 +40,7 @@ export class TouristService {
     const tourist = await this.touristRepository.findOne({
       where: { phone },
       relations: { status: true, trips: true },
+      withDeleted: true,
     });
     if (!tourist) {
       throw new NotFoundException('Tourist not found');
@@ -49,6 +52,7 @@ export class TouristService {
     const tourist = await this.touristRepository.findOne({
       where: { phone },
       relations: { status: true, trips: true },
+      withDeleted: true,
     });
     return tourist;
   }

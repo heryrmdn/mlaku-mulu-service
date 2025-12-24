@@ -29,6 +29,7 @@ export class UserService {
   async getList(): Promise<User[]> {
     return this.userRepository.find({
       relations: { role: true, status: true },
+      withDeleted: true,
     });
   }
 
@@ -36,6 +37,7 @@ export class UserService {
     const user = await this.userRepository.findOne({
       where: { id },
       relations: { role: { rolePermissions: true }, status: true },
+      withDeleted: true,
     });
     if (!user) {
       throw new NotFoundException('User not found');
@@ -47,11 +49,12 @@ export class UserService {
     return this.userRepository.findOne({
       where: { username },
       relations: { role: { rolePermissions: true }, status: true },
+      withDeleted: true,
     });
   }
 
   async getDetailByEmail(email: string): Promise<User | null> {
-    return this.userRepository.findOne({ where: { email } });
+    return this.userRepository.findOne({ where: { email }, withDeleted: true });
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {

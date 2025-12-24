@@ -20,6 +20,7 @@ export class RoleService {
   async getList(): Promise<Role[]> {
     return this.roleRepository.find({
       relations: { status: true, rolePermissions: true },
+      withDeleted: true,
     });
   }
 
@@ -27,6 +28,7 @@ export class RoleService {
     const role = await this.roleRepository.findOne({
       where: { id },
       relations: { status: true, rolePermissions: true },
+      withDeleted: true,
     });
     if (!role) {
       throw new NotFoundException('Role not found');

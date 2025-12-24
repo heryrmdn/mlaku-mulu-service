@@ -13,6 +13,7 @@ export class RolePermissionService {
   async getList(): Promise<RolePermission[]> {
     return this.rolePermissionRepository.find({
       relations: { role: true, permission: true },
+      withDeleted: true,
     });
   }
 
@@ -20,6 +21,7 @@ export class RolePermissionService {
     const rolePermission = await this.rolePermissionRepository.findOne({
       where: { id },
       relations: { role: true, permission: true },
+      withDeleted: true,
     });
     if (!rolePermission) {
       throw new NotFoundException('Role Permission not found');

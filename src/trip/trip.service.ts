@@ -15,13 +15,17 @@ export class TripService {
   ) {}
 
   async getList(): Promise<Trip[]> {
-    return this.tripRepository.find({ relations: { tourist: true } });
+    return this.tripRepository.find({
+      relations: { tourist: true },
+      withDeleted: true,
+    });
   }
 
   async getDetailById(id: number): Promise<Trip> {
     const trip = await this.tripRepository.findOne({
       where: { id },
       relations: { tourist: true },
+      withDeleted: true,
     });
     if (!trip) {
       throw new NotFoundException('Trip not found');

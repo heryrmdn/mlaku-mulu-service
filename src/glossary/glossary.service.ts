@@ -11,10 +11,13 @@ export class GlossaryService {
   ) {}
 
   async getList(): Promise<Glossary[]> {
-    return this.glossaryRepository.find();
+    return this.glossaryRepository.find({ withDeleted: true });
   }
 
   async getDetailById(id: number): Promise<Glossary | null> {
-    return this.glossaryRepository.findOne({ where: { id } });
+    return this.glossaryRepository.findOne({
+      where: { id },
+      withDeleted: true,
+    });
   }
 }
