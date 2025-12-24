@@ -16,7 +16,7 @@ Service for Mlaku Mulu operations.
 
 ```bash
 git clone https://github.com/heryrmdn/mlaku-mulu-service.git
-mlaku-mulu-service
+cd mlaku-mulu-service
 ```
 
 ### 2. Install Dependencies
