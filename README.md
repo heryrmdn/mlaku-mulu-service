@@ -2,6 +2,13 @@
 
 Service for Mlaku Mulu operations.
 
+## Key Features
+
+- Basic Role-based access control (RBAC) implementation
+- Manage Tourist
+- Manage Tourist Trips
+- Manage User
+
 ## Technology Stack
 
 - Node.js 20
