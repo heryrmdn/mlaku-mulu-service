@@ -18,18 +18,22 @@ export class TouristService {
   ) {}
 
   async getList(): Promise<Tourist[]> {
-    return this.touristRepository.find({
-      relations: { status: true, trips: true },
-      withDeleted: true,
-    });
+    return this.touristRepository
+      .createQueryBuilder('t')
+      .withDeleted()
+      .leftJoinAndSelect('t.status', 'status')
+      .leftJoinAndSelect('t.trips', 'trips')
+      .getMany();
   }
 
   async getDetailById(id: number): Promise<Tourist> {
-    const tourist = await this.touristRepository.findOne({
-      where: { id },
-      relations: { status: true, trips: true },
-      withDeleted: true,
-    });
+    const tourist = await this.touristRepository
+      .createQueryBuilder('t')
+      .withDeleted()
+      .leftJoinAndSelect('t.status', 'status')
+      .leftJoinAndSelect('t.trips', 'trips')
+      .where({ id })
+      .getOne();
     if (!tourist) {
       throw new NotFoundException('Tourist not found');
     }
@@ -37,11 +41,13 @@ export class TouristService {
   }
 
   async getDetailByPhone(phone: string): Promise<Tourist> {
-    const tourist = await this.touristRepository.findOne({
-      where: { phone },
-      relations: { status: true, trips: true },
-      withDeleted: true,
-    });
+    const tourist = await this.touristRepository
+      .createQueryBuilder('t')
+      .withDeleted()
+      .leftJoinAndSelect('t.status', 'status')
+      .leftJoinAndSelect('t.trips', 'trips')
+      .where({ phone })
+      .getOne();
     if (!tourist) {
       throw new NotFoundException('Tourist not found');
     }
@@ -49,11 +55,13 @@ export class TouristService {
   }
 
   async getExistTouristByPhone(phone: string): Promise<Tourist | null> {
-    const tourist = await this.touristRepository.findOne({
-      where: { phone },
-      relations: { status: true, trips: true },
-      withDeleted: true,
-    });
+    const tourist = await this.touristRepository
+      .createQueryBuilder('t')
+      .withDeleted()
+      .leftJoinAndSelect('t.status', 'status')
+      .leftJoinAndSelect('t.trips', 'trips')
+      .where({ phone })
+      .getOne();
     return tourist;
   }
 

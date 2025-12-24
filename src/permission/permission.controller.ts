@@ -29,7 +29,9 @@ export class PermissionController {
   @UseGuards(AuthGuard, PermissionGuard)
   @Permission(PermissionUtil.DetailPermission)
   @Get(':id')
-  getDetailById(@Param('id', ParseIntPipe) id: number): Promise<PermissionEntity | null> {
+  getDetailById(
+    @Param('id', ParseIntPipe) id: number,
+  ): Promise<PermissionEntity> {
     return this.permissionService.getDetailById(id);
   }
 }

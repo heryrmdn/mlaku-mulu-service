@@ -15,18 +15,20 @@ export class TripService {
   ) {}
 
   async getList(): Promise<Trip[]> {
-    return this.tripRepository.find({
-      relations: { tourist: true },
-      withDeleted: true,
-    });
+    return this.tripRepository
+      .createQueryBuilder('t')
+      .withDeleted()
+      .leftJoinAndSelect('t.tourist', 'tourist')
+      .getMany();
   }
 
   async getDetailById(id: number): Promise<Trip> {
-    const trip = await this.tripRepository.findOne({
-      where: { id },
-      relations: { tourist: true },
-      withDeleted: true,
-    });
+    const trip = await this.tripRepository
+      .createQueryBuilder('t')
+      .withDeleted()
+      .leftJoinAndSelect('t.tourist', 'tourist')
+      .where({ id })
+      .getOne();
     if (!trip) {
       throw new NotFoundException('Trip not found');
     }

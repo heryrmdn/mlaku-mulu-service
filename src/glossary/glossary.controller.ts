@@ -29,9 +29,7 @@ export class GlossaryController {
   @UseGuards(AuthGuard, PermissionGuard)
   @Permission(PermissionUtil.DetailGlossary)
   @Get(':id')
-  getDetailById(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<Glossary | null> {
+  getDetailById(@Param('id', ParseIntPipe) id: number): Promise<Glossary> {
     return this.glossaryService.getDetailById(id);
   }
 }

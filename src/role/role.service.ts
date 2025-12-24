@@ -18,18 +18,23 @@ export class RoleService {
   ) {}
 
   async getList(): Promise<Role[]> {
-    return this.roleRepository.find({
-      relations: { status: true, rolePermissions: true },
-      withDeleted: true,
-    });
+    return this.roleRepository
+      .createQueryBuilder('r')
+      .withDeleted()
+      .leftJoinAndSelect('r.status', 'status')
+      .leftJoinAndSelect('r.rolePermissions', 'rolePermissions')
+      .getMany();
   }
 
   async getDetailById(id: number): Promise<Role> {
-    const role = await this.roleRepository.findOne({
-      where: { id },
-      relations: { status: true, rolePermissions: true },
-      withDeleted: true,
-    });
+    const role = await this.roleRepository
+      .createQueryBuilder('r')
+      .withDeleted()
+      .leftJoinAndSelect('r.status', 'status')
+      .leftJoinAndSelect('r.rolePermissions', 'rolePermissions')
+      .where({ id })
+      .getOne();
+
     if (!role) {
       throw new NotFoundException('Role not found');
     }
@@ -39,6 +44,9 @@ export class RoleService {
   async getDetailByLowerName(name: string): Promise<Role | null> {
     const role = await this.roleRepository
       .createQueryBuilder('r')
+      .withDeleted()
+      .leftJoinAndSelect('r.status', 'status')
+      .leftJoinAndSelect('r.rolePermissions', 'rolePermissions')
       .where("LOWER(REPLACE(r.name, ' ', '')) = :name", {
         name: name.replace(/\s/g, '').toLowerCase(),
       })

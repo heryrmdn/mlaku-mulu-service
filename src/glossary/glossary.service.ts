@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Glossary } from './entity/glossary.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -11,13 +11,23 @@ export class GlossaryService {
   ) {}
 
   async getList(): Promise<Glossary[]> {
-    return this.glossaryRepository.find({ withDeleted: true });
+    return this.glossaryRepository
+      .createQueryBuilder('g')
+      .withDeleted()
+      .getMany();
   }
 
-  async getDetailById(id: number): Promise<Glossary | null> {
-    return this.glossaryRepository.findOne({
-      where: { id },
-      withDeleted: true,
-    });
+  async getDetailById(id: number): Promise<Glossary> {
+    const glossary = await this.glossaryRepository
+      .createQueryBuilder('g')
+      .withDeleted()
+      .where({ id })
+      .getOne();
+
+    if (!glossary) {
+      throw new NotFoundException('Glossary not found');
+    }
+
+    return glossary;
   }
 }

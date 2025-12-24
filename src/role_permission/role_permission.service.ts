@@ -11,18 +11,22 @@ export class RolePermissionService {
   ) {}
 
   async getList(): Promise<RolePermission[]> {
-    return this.rolePermissionRepository.find({
-      relations: { role: true, permission: true },
-      withDeleted: true,
-    });
+    return this.rolePermissionRepository
+      .createQueryBuilder('rp')
+      .withDeleted()
+      .leftJoinAndSelect('rp.role', 'role')
+      .leftJoinAndSelect('rp.permission', 'permission')
+      .getMany();
   }
 
   async getDetailById(id: number): Promise<RolePermission | null> {
-    const rolePermission = await this.rolePermissionRepository.findOne({
-      where: { id },
-      relations: { role: true, permission: true },
-      withDeleted: true,
-    });
+    const rolePermission = await this.rolePermissionRepository
+      .createQueryBuilder('rp')
+      .withDeleted()
+      .leftJoinAndSelect('rp.role', 'role')
+      .leftJoinAndSelect('rp.permission', 'permission')
+      .where({ id })
+      .getOne();
     if (!rolePermission) {
       throw new NotFoundException('Role Permission not found');
     }

@@ -27,18 +27,23 @@ export class UserService {
   ) {}
 
   async getList(): Promise<User[]> {
-    return this.userRepository.find({
-      relations: { role: true, status: true },
-      withDeleted: true,
-    });
+    return this.userRepository
+      .createQueryBuilder('u')
+      .withDeleted()
+      .leftJoinAndSelect('u.role', 'role')
+      .leftJoinAndSelect('u.status', 'status')
+      .getMany();
   }
 
   async getDetailById(id: number): Promise<User> {
-    const user = await this.userRepository.findOne({
-      where: { id },
-      relations: { role: { rolePermissions: true }, status: true },
-      withDeleted: true,
-    });
+    const user = await this.userRepository
+      .createQueryBuilder('u')
+      .withDeleted()
+      .leftJoinAndSelect('u.role', 'role')
+      .leftJoinAndSelect('role.rolePermissions', 'rolePermissions')
+      .leftJoinAndSelect('u.status', 'status')
+      .where({ id })
+      .getOne();
     if (!user) {
       throw new NotFoundException('User not found');
     }
@@ -46,15 +51,22 @@ export class UserService {
   }
 
   async getDetailByUsername(username: string): Promise<User | null> {
-    return this.userRepository.findOne({
-      where: { username },
-      relations: { role: { rolePermissions: true }, status: true },
-      withDeleted: true,
-    });
+    return this.userRepository
+      .createQueryBuilder('u')
+      .withDeleted()
+      .leftJoinAndSelect('u.role', 'role')
+      .leftJoinAndSelect('role.rolePermissions', 'rolePermissions')
+      .leftJoinAndSelect('u.status', 'status')
+      .where({ username })
+      .getOne();
   }
 
   async getDetailByEmail(email: string): Promise<User | null> {
-    return this.userRepository.findOne({ where: { email }, withDeleted: true });
+    return this.userRepository
+      .createQueryBuilder('u')
+      .withDeleted()
+      .where({ email })
+      .getOne();
   }
 
   async create(createUserDto: CreateUserDto): Promise<User> {

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Permission } from './entity/permission.entity';
@@ -11,13 +11,23 @@ export class PermissionService {
   ) {}
 
   async getList(): Promise<Permission[]> {
-    return this.permissionRepository.find({ withDeleted: true });
+    return this.permissionRepository
+      .createQueryBuilder('p')
+      .withDeleted()
+      .getMany();
   }
 
-  async getDetailById(id: number): Promise<Permission | null> {
-    return this.permissionRepository.findOne({
-      where: { id },
-      withDeleted: true,
-    });
+  async getDetailById(id: number): Promise<Permission> {
+    const permission = await this.permissionRepository
+      .createQueryBuilder('p')
+      .withDeleted()
+      .where({ id })
+      .getOne();
+
+    if (!permission) {
+      throw new NotFoundException('Permission not found');
+    }
+
+    return permission;
   }
 }
