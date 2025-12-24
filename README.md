@@ -71,7 +71,7 @@ npm run migrate:down
 
 ```bash
 docker build -t mlaku-mulu-service .
-docker-compose up -d
+docker compose up -d
 ```
 
 ## API Documentation
